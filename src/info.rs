@@ -20,6 +20,8 @@ pub const PID_STREAMDECK_MK2: u16 = 0x0080;
 pub const PID_STREAMDECK_MK2_SCISSOR_KEYS: u16 = 0x00a5;
 /// Product ID of Stream Deck Mini Mk2
 pub const PID_STREAMDECK_MINI_MK2: u16 = 0x0090;
+/// Product ID of Stream Deck Mini Discord Edition
+pub const PID_STREAMDECK_MINI_DISCORD: u16 = 0x00b3;
 /// Product ID of Stream Deck Neo
 pub const PID_STREAMDECK_NEO: u16 = 0x009a;
 /// Product ID of Stream Deck Pedal
@@ -60,6 +62,8 @@ pub enum Kind {
     Mk2Scissor,
     /// Stream Deck Mini Mk2
     MiniMk2,
+    /// Stream Deck Mini Discord Edition
+    MiniDiscord,
     /// Stream Deck Neo
     Neo,
     /// Stream Deck Pedal
@@ -87,6 +91,7 @@ impl Kind {
                 PID_STREAMDECK_MK2 => Some(Kind::Mk2),
                 PID_STREAMDECK_MK2_SCISSOR_KEYS => Some(Kind::Mk2Scissor),
                 PID_STREAMDECK_MINI_MK2 => Some(Kind::MiniMk2),
+                PID_STREAMDECK_MINI_DISCORD => Some(Kind::MiniDiscord),
                 PID_STREAMDECK_NEO => Some(Kind::Neo),
                 PID_STREAMDECK_PEDAL => Some(Kind::Pedal),
                 PID_STREAMDECK_PLUS => Some(Kind::Plus),
@@ -110,6 +115,7 @@ impl Kind {
             Kind::Mk2 => PID_STREAMDECK_MK2,
             Kind::Mk2Scissor => PID_STREAMDECK_MK2_SCISSOR_KEYS,
             Kind::MiniMk2 => PID_STREAMDECK_MINI_MK2,
+            Kind::MiniDiscord => PID_STREAMDECK_MINI_DISCORD,
             Kind::Neo => PID_STREAMDECK_NEO,
             Kind::Pedal => PID_STREAMDECK_PEDAL,
             Kind::Plus => PID_STREAMDECK_PLUS,
@@ -130,6 +136,7 @@ impl Kind {
             Kind::Mk2 => ELGATO_VENDOR_ID,
             Kind::Mk2Scissor => ELGATO_VENDOR_ID,
             Kind::MiniMk2 => ELGATO_VENDOR_ID,
+            Kind::MiniDiscord => ELGATO_VENDOR_ID,
             Kind::Neo => ELGATO_VENDOR_ID,
             Kind::Pedal => ELGATO_VENDOR_ID,
             Kind::Plus => ELGATO_VENDOR_ID,
@@ -143,7 +150,7 @@ impl Kind {
     pub fn key_count(&self) -> u8 {
         match self {
             Kind::Original | Kind::OriginalV2 | Kind::Mk2 | Kind::Mk2Scissor | Kind::Mk2Module => 15,
-            Kind::Mini | Kind::MiniMk2 | Kind::MiniMk2Module => 6,
+            Kind::Mini | Kind::MiniMk2 | Kind::MiniDiscord | Kind::MiniMk2Module => 6,
             Kind::Xl | Kind::XlV2 | Kind::XlV2Module => 32,
             Kind::Pedal => 3,
             Kind::Neo | Kind::Plus => 8,
@@ -154,7 +161,7 @@ impl Kind {
     pub fn row_count(&self) -> u8 {
         match self {
             Kind::Original | Kind::OriginalV2 | Kind::Mk2 | Kind::Mk2Scissor | Kind::Mk2Module => 3,
-            Kind::Mini | Kind::MiniMk2 | Kind::MiniMk2Module => 2,
+            Kind::Mini | Kind::MiniMk2 | Kind::MiniDiscord | Kind::MiniMk2Module => 2,
             Kind::Xl | Kind::XlV2 | Kind::XlV2Module => 4,
             Kind::Pedal => 1,
             Kind::Neo | Kind::Plus => 2,
@@ -165,7 +172,7 @@ impl Kind {
     pub fn column_count(&self) -> u8 {
         match self {
             Kind::Original | Kind::OriginalV2 | Kind::Mk2 | Kind::Mk2Scissor | Kind::Mk2Module => 5,
-            Kind::Mini | Kind::MiniMk2 | Kind::MiniMk2Module => 3,
+            Kind::Mini | Kind::MiniMk2 | Kind::MiniDiscord | Kind::MiniMk2Module => 3,
             Kind::Xl | Kind::XlV2 | Kind::XlV2Module => 8,
             Kind::Pedal => 3,
             Kind::Neo | Kind::Plus => 4,
@@ -224,7 +231,7 @@ impl Kind {
                 mirror: ImageMirroring::Both,
             },
 
-            Kind::Mini | Kind::MiniMk2 | Kind::MiniMk2Module => ImageFormat {
+            Kind::Mini | Kind::MiniMk2 | Kind::MiniDiscord | Kind::MiniMk2Module => ImageFormat {
                 mode: ImageMode::BMP,
                 size: (80, 80),
                 rotation: ImageRotation::Rot90,
@@ -271,7 +278,7 @@ impl Kind {
     /// Returns blank image data appropriate for the Stream Deck kind
     pub fn blank_image(&self) -> Vec<u8> {
         match self {
-            Kind::Original | Kind::Mini | Kind::MiniMk2 | Kind::MiniMk2Module => {
+            Kind::Original | Kind::Mini | Kind::MiniMk2 | Kind::MiniDiscord | Kind::MiniMk2Module => {
                 let mut data = vec![
                     0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x01, 0x00, 0x18, 0x00,
                     0x00, 0x00, 0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
