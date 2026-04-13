@@ -3,7 +3,7 @@ compile_error!("The `async` feature must be enabled to compile this example.");
 
 use std::time::Duration;
 use image::open;
-
+use elgato_streamdeck::info::{ImageFormat};
 use elgato_streamdeck::{DeviceStateUpdate, list_devices, new_hidapi, AsyncStreamDeck};
 use elgato_streamdeck::images::{convert_image_with_format, ImageRect};
 use tokio::time::sleep;
@@ -50,7 +50,13 @@ async fn main() {
                     Some((w, h)) => {
                         let min = w.min(h) as u32;
                         let scaled_image = image.clone().resize_to_fill(min, min, image::imageops::Nearest);
-                        Some(ImageRect::from_image(scaled_image).unwrap())
+                        let converted_image = convert_image_with_format(ImageFormat {
+                            mode: device.kind().lcd_image_format().unwrap().mode,
+                            size: (min.try_into().unwrap(), min.try_into().unwrap()),
+                            rotation: device.kind().lcd_image_format().unwrap().rotation,
+                            mirror: device.kind().lcd_image_format().unwrap().mirror,
+                            }, scaled_image).unwrap();
+                        Some(ImageRect::from_image(image::load_from_memory(&converted_image).unwrap()).unwrap())
                     }
                     None => None,
                 };

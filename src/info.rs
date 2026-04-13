@@ -209,7 +209,7 @@ impl Kind {
     pub fn lcd_strip_size(&self) -> Option<(usize, usize)> {
         match self {
             Kind::Plus => Some((800, 100)),
-            Kind::PlusXl => Some((1200, 100)),
+            Kind::PlusXl => Some((100, 1200)),
             Kind::Neo => Some((248, 58)),
             _ => None,
         }
@@ -259,7 +259,7 @@ impl Kind {
             Kind::Plus | Kind::PlusXl => ImageFormat {
                 mode: ImageMode::JPEG,
                 size: (120, 120),
-                rotation: ImageRotation::Rot0,
+                rotation: ImageRotation::Rot270,
                 mirror: ImageMirroring::None,
             },
 
@@ -284,8 +284,8 @@ impl Kind {
             }),
             Kind::PlusXl => Some(ImageFormat {
                 mode: ImageMode::JPEG,
-                size: (1200, 100),
-                rotation: ImageRotation::Rot0,
+                size: (100, 1200),
+                rotation: ImageRotation::Rot270,
                 mirror: ImageMirroring::None,
             }),
             _ => None,
